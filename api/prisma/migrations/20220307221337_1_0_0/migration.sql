@@ -5,13 +5,15 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "salt" TEXT NOT NULL,
-    "mfa" BOOLEAN NOT NULL DEFAULT false
+    "mfa" BOOLEAN NOT NULL DEFAULT false,
+    "privilege" INTEGER NOT NULL DEFAULT 0
 );
 
 -- CreateTable
 CREATE TABLE "Contest" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
+    "tag" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -80,7 +82,7 @@ CREATE TABLE "TestResult" (
 CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Contest_name_key" ON "Contest"("name");
+CREATE UNIQUE INDEX "Contest_tag_key" ON "Contest"("tag");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Problem_tag_key" ON "Problem"("tag");

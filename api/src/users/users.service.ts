@@ -16,6 +16,14 @@ export class UsersService {
     });
   }
 
+  async getById(id: number): Promise<User | undefined> {
+    return this.prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+    });
+  }
+
   async createUser(
     username: string,
     password: string,

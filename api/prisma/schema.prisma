@@ -12,6 +12,7 @@ model User {
   password  String
   salt      String
   mfa       Boolean  @default(false)
+  privilege Int      @default(0)
 
   contests   UsersOnContests[]
   Submission Submission[]
@@ -19,7 +20,8 @@ model User {
 
 model Contest {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
+  name      String
+  tag       String   @unique
   createdAt DateTime @default(now())
 
   participants UsersOnContests[]
