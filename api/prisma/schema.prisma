@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String   @unique
+  password  String
+  salt      String
+  mfa       Boolean  @default(false)
+
+  contests   UsersOnContests[]
+  Submission Submission[]
+}
+
+model Contest {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+
+  participants UsersOnContests[]
+  problems     Problem[]
+}
+
+model UsersOnContests {
+  contest   Contest @relation(fields: [contestId], references: [id])
+  User      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  contestId Int
+
+  assignedAt DateTime @default(now())
+
+  @@id([userId, contestId])
+}
+
+model Problem {
+  id        Int      @id @default(autoincrement())
+  tag       String   @unique
+  name      String
+  createdAt DateTime @default(now())
+
+  Contest     Contest       @relation(fields: [contestId], references: [id])
+  contestId   Int
+  Submission  Submission[]
+  ProblemTest ProblemTest[]
+}
+
+model Submission {
+  id          Int      @id @default(autoincrement())
+  submittedAt DateTime @default(now())
+
+  serverId String @unique
+
+  code String // relative to the main url path to the code on the server (auth protected)
+
+  problem   Problem @relation(fields: [problemId], references: [id])
+  problemId Int
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  resultsAvailable Boolean @default(false)
+
+  results   Results? @relation(fields: [resultsId], references: [id])
+  resultsId Int?     @unique
+}
+
+model Results {
+  id          Int      @id @default(autoincrement())
+  submittedAt DateTime @default(now())
+
+  Submission Submission?
+  TestResult TestResult[]
+}
+
+model ProblemTest {
+  id Int @id @default(autoincrement())
+
+  input       String // filename with the test
+  expectedOut String // file
+
+  problem    Problem      @relation(fields: [problemId], references: [id])
+  problemId  Int
+  TestResult TestResult[]
+}
+
+model TestResult {
+  id    Int @id @default(autoincrement())
+  score Int
+
+  test          ProblemTest @relation(fields: [problemTestId], references: [id])
+  problemTestId Int
+
+  results   Results? @relation(fields: [resultsId], references: [id])
+  resultsId Int?
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
