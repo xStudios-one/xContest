@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
 import * as uniqid from 'uniqid';
 import * as fs from 'fs';
 import { exec } from 'child_process';
 import 'dotenv/config'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-import express from 'express';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/service/prisma/prisma.service';
+import { ProblemTest } from '@prisma/client';
+
 interface workerReturn {
   status: number;
   msg: string;
@@ -20,16 +22,92 @@ interface workerReturn {
 //    MAXSCORE (int)
 //    tests (optional ...)
 //    participants ...
-
 @Injectable()
 export class ExecService {
+  constructor(private prismaService: PrismaService) {}
+  async getContest(tag: string) {
+    return await this.prismaService.contest.findUnique({
+      where: {
+        tag: tag,
+      },
+    });
+  }
+  async getProblem(tag: string, contestId: number) {
+    return await this.prismaService.problem.findMany({
+      where: {
+        AND: {
+          tag: {
+            equals: tag,
+          },
+          contestId: {
+            equals: contestId,
+          },
+        },
+      },
+    });
+  }
+
+  async getProblemTests(problemId: number): Promise<ProblemTest[]> {
+    return await this.prismaService.problemTest.findMany({
+      where: {
+        problemId: problemId,
+      },
+    });
+  }
+
+  async createResults(submissionId: number) {
+    return await this.prismaService.results.create({
+      data: {
+        Submission: {
+          connect: {
+            id: submissionId,
+          },
+        },
+      },
+    });
+  }
+
+  async addTestResult(score: number, resultsId: number, testId: number) {
+    return await this.prismaService.testResult.create({
+      data: {
+        score: score,
+        results: {
+          connect: {
+            id: resultsId,
+          },
+        },
+        test: {
+          connect: {
+            id: testId,
+          },
+        },
+      },
+    });
+  }
+
   async startWorker(
     code: string,
-    contest: string,
-    question: string,
+    contestTag: string,
+    problemTag: string,
+    user: any,
   ): Promise<workerReturn> {
+    // TODO: get tests and other things for this contest
+    const uid = user.userId;
+    const contest = await this.getContest(contestTag);
+    if (!contest) return;
+    const problem = await this.getProblem(problemTag, contest.id);
+    if (!problem[0]) return;
+    const tests = await this.getProblemTests(problem[0].id);
     const workerID = uniqid();
-    console.log(`Worker spawned with ID: ${workerID}`);
+    console.log(problem[0].id);
+    console.log(uid);
+    const submission = await this.prismaService.submission.create({
+      data: {
+        serverId: workerID,
+        problemId: problem[0].id,
+        authorId: uid,
+      },
+    });
     fs.writeFile(
       `./src/exec/service/runtime/code/${workerID}.cpp`,
       code,
@@ -40,18 +118,54 @@ export class ExecService {
         );
       },
     );
+
+    const results = await this.createResults(submission.id);
+
+    let i = 0;
+    const countNext = async () => {
+      ++i;
+      if (i >= tests.length) {
+        await this.prismaService.submission.update({
+          where: {
+            id: submission.id,
+          },
+          data: {
+            resultsAvailable: true,
+          },
+        });
+      }
+    };
+
+    console.log(`Worker spawned with ID: ${workerID}`);
     exec(
-      `clang++ ./src/exec/service/runtime/code/${workerID}.cpp -o ./src/exec/service/runtime/${workerID}.out`,
-    ).once('exit', () => {
-      exec(
-        `cd ./src/exec/service/runtime/ && touch ${workerID}.i && sudo sh createWorker.sh ${workerID} ${process.env.TIMEOUT}`,
-      );
+      `clang++ ./src/exec/service/runtime/code/${workerID}.cpp -o ./src/exec/service/runtime/${workerID}-OC.out`,
+    ).once('exit', (exitCode) => {
+      if (exitCode != 0) return; // TODO: Notify user about compilation error?
+      for (const test of tests) {
+        fs.copyFileSync(
+          `./src/exec/service/runtime/${workerID}-OC.out`,
+          `./src/exec/service/runtime/${workerID}-${test.id}.out`,
+        );
+        exec(
+          `cd ./src/exec/service/runtime/ && touch ${workerID}-${test.id}.i && sudo sh createWorker.sh ${workerID}-${test.id} ${process.env.TIMEOUT}`,
+        ).once('exit', async () => {
+          await this.addTestResult(
+            Math.floor(Math.random() * 100),
+            results.id,
+            test.id,
+          );
+          countNext();
+        });
+      }
+      fs.unlinkSync(`./src/exec/service/runtime/${workerID}-OC.out`);
     });
+
     return {
       status: 200,
       msg: 'Worker started',
       ansLink: `${process.env.URL}/${workerID}`,
       ansMethod: 'GET',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       estTime: process.env.TIMEOUT * 1000,
     };

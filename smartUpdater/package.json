@@ -1,0 +1,11 @@
+{
+  "name": "smartupdater",
+  "version": "1.0.0",
+  "description": "Smart updater",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "InfoX#1337",
+  "license": "SEE LICENSE IN LICENSE"
+}
