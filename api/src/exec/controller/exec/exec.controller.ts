@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ExecService } from '../../service/exec/exec.service';
@@ -32,10 +33,13 @@ export class ExecController {
     );
   }
   @Get(':id')
-  ans(@Param('id') id: string): any {
-    const response = this.execService.retrieveAns(id);
-    if (!response) {
+  async ans(@Param('id') id: string) {
+    const response = await this.execService.retrieveAns(id);
+    if (response == 'NID') {
       throw new BadRequestException();
+    }
+    if (!response) {
+      throw new NotFoundException();
     }
     return response;
   }

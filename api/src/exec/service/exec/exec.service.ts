@@ -55,6 +55,14 @@ export class ExecService {
     });
   }
 
+  async getSubmission(submissionId: string): Promise<any> {
+    return await this.prismaService.submission.findMany({
+      where: {
+        serverId: submissionId,
+      },
+    });
+  }
+
   async createResults(submissionId: number) {
     return await this.prismaService.results.create({
       data: {
@@ -163,7 +171,7 @@ export class ExecService {
     return {
       status: 200,
       msg: 'Worker started',
-      ansLink: `${process.env.URL}/${workerID}`,
+      ansLink: `${process.env.URL}/exec/${workerID}`,
       ansMethod: 'GET',
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -171,10 +179,38 @@ export class ExecService {
     };
   }
 
-  retrieveAns(id: string): any {
+  async retrieveAns(id: string): Promise<any> {
     if (!id) {
-      return null;
+      return 'NID';
     }
-    return { id: id };
+    const submission = await this.getSubmission(id);
+    if (!submission[0]) return undefined;
+    if (!submission[0].resultsAvailable) return { resultsAvailable: false };
+    const result = await this.prismaService.results.findUnique({
+      where: {
+        id: submission.resultsId,
+      },
+    });
+    try {
+      const data = fs.readFileSync(
+        `./src/exec/service/runtime/out/${id}-1.o`,
+        'utf8',
+      );
+      if (data == `TIMEOUT-${id}-1\n`)
+        return {
+          resultsAvailable: false,
+          id: id,
+          points: 0,
+          data: `TIMEOUT: ${id}`,
+        };
+      return {
+        resultsAvailable: true,
+        id: id,
+        points: result.score,
+        data: data,
+      };
+    } catch (e) {
+      return undefined;
+    }
   }
 }

@@ -25,7 +25,12 @@ export class LoginController {
 
   @Post('register')
   async register(@Body() req) {
-    if (!req.username || !req.password) {
+    if (
+      !req.username ||
+      !req.password ||
+      typeof req.username != 'string' ||
+      typeof req.password != 'string'
+    ) {
       throw new BadRequestException();
     }
     return this.usersService.createUser(req.username, req.password);
