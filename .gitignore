@@ -14,6 +14,12 @@ api/lerna-debug.log*
 # OS
 api/.DS_Store
 
+# Frontend
+frontend/dashboard/.env.local
+frontend/dashboard/.env
+frontend/dashboard/.next
+frontend/dashboard/node_modules
+
 # Tests
 api/coverage
 api/.nyc_output

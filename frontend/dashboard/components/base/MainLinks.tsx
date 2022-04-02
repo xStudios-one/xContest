@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import { User, Dashboard } from "tabler-icons-react";
+import { User, List } from "tabler-icons-react";
 import { ThemeIcon, UnstyledButton, Group, Text } from "@mantine/core";
 
 interface MainLinkProps {
@@ -47,9 +47,9 @@ const MainLink: NextPage<MainLinkProps> = ({ icon, color, label, href }) => {
 
 const data = [
     {
-        icon: <Dashboard size={16} />,
+        icon: <List size={16} />,
         color: "green",
-        label: "Dashboard",
+        label: "Contests",
         href: "/",
     },
     {
