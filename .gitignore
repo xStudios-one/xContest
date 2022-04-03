@@ -87,3 +87,5 @@ frontend/dashboard/*.tsbuildinfo
 
 start/node_modules
 frontend/dashboard/node_modules
+
+.VSCodeCounter/
