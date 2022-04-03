@@ -37,7 +37,7 @@ const SubmissionDetails: NextPage<SubmissionProps> = ({ tests, initialTests }) =
 
                     <tbody>
                         {tests.map(test =>
-                            <tr>
+                            <tr key={test.name}>
                                 <td>{test.name}</td>
                                 <td><Badge color={getStatusColor(test.status)}>{test.status}</Badge></td>
                                 <td>{test.time}s/{test.maxTime}s</td>
@@ -63,7 +63,7 @@ const SubmissionDetails: NextPage<SubmissionProps> = ({ tests, initialTests }) =
 
                     <tbody>
                         {initialTests.map(test =>
-                            <tr>
+                            <tr key={test.name}>
                                 <td>{test.name}</td>
                                 <td><Badge color={getStatusColor(test.status)}>{test.status}</Badge></td>
                                 <td>{test.time}s/{test.maxTime}s</td>

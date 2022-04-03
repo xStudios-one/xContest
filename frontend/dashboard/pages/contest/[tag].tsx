@@ -13,6 +13,7 @@ import {
   Send,
 } from "tabler-icons-react";
 import MySubmissions from "../../components/contest/MySubmissions";
+import Submit from "../../components/contest/Submit";
 import { API_URL } from "../../Constants";
 
 const Contest = () => {
@@ -60,7 +61,7 @@ const Contest = () => {
         <Tabs>
           <Tabs.Tab label="Problems" icon={<Books size={18} />}></Tabs.Tab>
           <Tabs.Tab label="Files" icon={<File size={18} />}></Tabs.Tab>
-          <Tabs.Tab label="Submit" icon={<FileUpload size={18} />}></Tabs.Tab>
+          <Tabs.Tab label="Submit" icon={<FileUpload size={18} />}><Submit contestTag={contest.tag} /></Tabs.Tab>
           <Tabs.Tab label="My Submissions" icon={<Send size={18} />}><MySubmissions contestTag={contest.tag} /></Tabs.Tab>
           <Tabs.Tab label="Ranking" icon={<ListNumbers size={18} />}></Tabs.Tab>
           <Tabs.Tab label="Messages" icon={<Mailbox size={18} />}></Tabs.Tab>

@@ -34,7 +34,6 @@ const ContestsList: NextPage = () => {
   }
 
   useEffect(() => {
-    console.log('loading contests')
     loadContests();
   }, []);
 
