@@ -12,17 +12,19 @@ import {
   Mailbox,
   Send,
 } from "tabler-icons-react";
+import MySubmissions from "../../components/contest/MySubmissions";
 import { API_URL } from "../../Constants";
 
 const Contest = () => {
-    const router = useRouter();
-    const { query } = router;
+  const router = useRouter();
+  const { query } = router;
   const [isLoading, setLoading] = useState(true);
   const [contest, setContest] = useState<any>({
     name: "Loading...",
   });
 
   function loadContestInfo(tag: any) {
+    if (tag == undefined) return;
     axios
       .get(`${API_URL}/contests/${tag}`)
       .then((response) => {
@@ -40,11 +42,10 @@ const Contest = () => {
       });
   }
 
-
-  // ! TODO: fix multiple requests
   useEffect(() => {
     loadContestInfo(query.tag);
-  }, [router.isReady]);
+  }, [router.isReady, query.tag]);
+
 
   return (
     <div style={{ position: "relative" }}>
@@ -60,7 +61,7 @@ const Contest = () => {
           <Tabs.Tab label="Problems" icon={<Books size={18} />}></Tabs.Tab>
           <Tabs.Tab label="Files" icon={<File size={18} />}></Tabs.Tab>
           <Tabs.Tab label="Submit" icon={<FileUpload size={18} />}></Tabs.Tab>
-          <Tabs.Tab label="My Submissions" icon={<Send size={18} />}></Tabs.Tab>
+          <Tabs.Tab label="My Submissions" icon={<Send size={18} />}><MySubmissions contestTag={contest.tag} /></Tabs.Tab>
           <Tabs.Tab label="Ranking" icon={<ListNumbers size={18} />}></Tabs.Tab>
           <Tabs.Tab label="Messages" icon={<Mailbox size={18} />}></Tabs.Tab>
         </Tabs>

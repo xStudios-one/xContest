@@ -7,11 +7,15 @@ import {
   Header,
   ColorSchemeProvider,
   ColorScheme,
+  Burger,
+  MediaQuery,
+  Group
 } from "@mantine/core";
 import { MainLinks } from "../components/base/MainLinks";
 import { Brand } from "../components/base/Brand";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NotificationsProvider } from "@mantine/notifications";
+import { useRouter } from "next/router";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -19,6 +23,13 @@ export default function App(props: AppProps) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
+  const [drawerOpened, setDrawerOpened] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    router.events.on('routeChangeStart', () => setDrawerOpened(false))
+  }, [])
 
   return (
     <>
@@ -46,8 +57,9 @@ export default function App(props: AppProps) {
             {/* App shell */}
             <AppShell
               padding="md"
+              fixed
               navbar={
-                <Navbar width={{ base: 300 }} p="xs">
+                <Navbar width={{ sm: 200, lg: 300 }} p="xs" hiddenBreakpoint="sm" hidden={!drawerOpened}>
                   <Navbar.Section grow>
                     <MainLinks />
                   </Navbar.Section>
@@ -55,7 +67,14 @@ export default function App(props: AppProps) {
               }
               header={
                 <Header height={60} px="xl">
-                  <Brand />
+                  <div style={{ display: 'flex', padding: 0, margin: 0, alignItems: 'center' }}>
+                    <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+                      <Burger opened={drawerOpened} onClick={() => setDrawerOpened(o => !o)} size="sm" mr="xl" />
+                    </MediaQuery>
+                    <div style={{ width: '100%' }}>
+                      <Brand />
+                    </div>
+                  </div>
                 </Header>
               }
               styles={(theme) => ({
@@ -71,7 +90,7 @@ export default function App(props: AppProps) {
             </AppShell>
           </NotificationsProvider>
         </MantineProvider>
-      </ColorSchemeProvider>
+      </ColorSchemeProvider >
     </>
   );
 }
