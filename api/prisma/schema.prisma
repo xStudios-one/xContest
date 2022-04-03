@@ -9,6 +9,7 @@ model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   name      String   @unique
+  email     String   @unique @default("")
   password  String
   salt      String
   mfa       Boolean  @default(false)
@@ -26,6 +27,7 @@ model Contest {
 
   participants UsersOnContests[]
   problems     Problem[]
+  rounds       Round[]
 }
 
 model UsersOnContests {
@@ -40,15 +42,21 @@ model UsersOnContests {
 }
 
 model Problem {
-  id        Int      @id @default(autoincrement())
-  tag       String
-  name      String
-  createdAt DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  tag            String
+  name           String
+  createdAt      DateTime @default(now())
+  memoryLimit    Int      @default(0)
+  timeLimit      Int      @default(0)
+  difficulty     String   @default("EASY")
+  maxSubmissions Int      @default(1)
 
   Contest     Contest       @relation(fields: [contestId], references: [id])
   contestId   Int
   Submission  Submission[]
   ProblemTest ProblemTest[]
+  Round       Round?        @relation(fields: [roundId], references: [id])
+  roundId     Int?
 }
 
 model Submission {
@@ -99,6 +107,19 @@ model TestResult {
 
   results   Results? @relation(fields: [resultsId], references: [id])
   resultsId Int?
+}
+
+model Round {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  startsAt DateTime
+  endsAt   DateTime
+
+  problems Problem[]
+
+  Contest   Contest? @relation(fields: [contestId], references: [id])
+  contestId Int?
 }
 
 datasource db {

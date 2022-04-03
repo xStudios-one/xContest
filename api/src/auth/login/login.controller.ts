@@ -5,6 +5,7 @@ import {
   Request,
   BadRequestException,
   Body,
+  ConflictException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
@@ -28,11 +29,22 @@ export class LoginController {
     if (
       !req.username ||
       !req.password ||
+      !req.email ||
       typeof req.username != 'string' ||
-      typeof req.password != 'string'
+      typeof req.password != 'string' ||
+      typeof req.email != 'string' ||
+      req.username.length > 20 ||
+      req.password > 30
     ) {
       throw new BadRequestException();
     }
-    return this.usersService.createUser(req.username, req.password);
+    const creationResult = await this.usersService.createUser(
+      req.username,
+      req.password,
+      req.email,
+    );
+
+    if (!creationResult) throw new ConflictException();
+    else return creationResult;
   }
 }

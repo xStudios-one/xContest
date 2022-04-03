@@ -10,6 +10,7 @@ import {
   Body,
   ConflictException,
   NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ContestsService } from 'src/contests/service/contests/contests.service';
@@ -27,6 +28,29 @@ export class ContestsController {
     return await this.contestsService.getAllContests();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('join/:contestTag')
+  async joinContest(@Request() req, @Param('contestTag') tag: string) {
+    const user = await this.usersService.getById(req.user.userId);
+    if (!user) return new InternalServerErrorException();
+    return await this.contestsService.joinContest(tag, user);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get('join/:contestTag')
+  async isOnContest(@Request() req, @Param('contestTag') tag: string) {
+    const user = await this.usersService.getById(req.user.userId);
+    if (!user) return new InternalServerErrorException();
+    return {
+      isUserOnContest: await this.contestsService.isUserOnContest(tag, user),
+    };
+  }
+  @UseGuards(JwtAuthGuard)
+  @Post('leave/:contestTag')
+  async leaveContest(@Request() req, @Param('contestTag') tag: string) {
+    const user = await this.usersService.getById(req.user.userId);
+    if (!user) return new InternalServerErrorException();
+    return await this.contestsService.leaveContest(tag, user);
+  }
   @Get(':tag')
   async getContest(@Param('tag') tag: string) {
     const response = await this.contestsService.getContest(tag);

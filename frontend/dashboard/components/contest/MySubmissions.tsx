@@ -1,4 +1,4 @@
-import { Accordion, Badge, Button, Group, Text } from "@mantine/core";
+import { Accordion, Badge, Button, Group, Text, MediaQuery } from "@mantine/core";
 import type { NextPage } from "next";
 import Link from "next/link";
 import SubmissionDetails from "./SubmissionDetails";
@@ -70,7 +70,7 @@ const MySubmissions: NextPage<MySubmissionsProps> = ({ contestTag }) => {
     ]
 
     const centerDiv = {
-        display: 'flex', width: '100%', justifyContent: 'center'
+        display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center'
     }
 
     const getStatusColor = (status: string) => {
@@ -96,7 +96,9 @@ const MySubmissions: NextPage<MySubmissionsProps> = ({ contestTag }) => {
         <Accordion iconPosition="right">
             {devItems.map(submission =>
                 <Accordion.Item label={<div style={{ display: 'flex', alignContent: 'center', justifyContent: 'space-evenly' }}>
-                    <Text style={{ width: '100%' }} align="center">{submission.submittedAt.toUTCString()}</Text>
+                    <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
+                        <Text style={{ width: '100%' }} align="center">{submission.submittedAt.toUTCString()}</Text>
+                    </MediaQuery>
 
                     <div style={centerDiv}>
                         <Link href={`/contest/${contestTag}/problem/${submission.problemTag}`} passHref>
@@ -104,11 +106,15 @@ const MySubmissions: NextPage<MySubmissionsProps> = ({ contestTag }) => {
                         </Link>
                     </div>
 
-                    <div style={centerDiv}><Badge>{submission.kind}</Badge></div>
+                    <div style={centerDiv}>
+                        <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
+                            <Badge>{submission.kind}</Badge>
+                        </MediaQuery>
+                    </div>
 
-                    <div style={centerDiv}><Badge color={getStatusColor(submission.status)}>{submission.status}</Badge></div>
+                    <div style={centerDiv}><Badge color={getStatusColor(submission.status)} mx={6}>{submission.status}</Badge></div>
 
-                    <div style={centerDiv}><Badge color={getScoreColor(submission.score)}>{submission.score}</Badge></div>
+                    <div style={centerDiv}><Badge color={getScoreColor(submission.score)} mx={6}>{submission.score}</Badge></div>
                 </div>} key={submission.id} >
                     <SubmissionDetails tests={submission.tests} initialTests={submission.initialTests} />
                 </Accordion.Item >

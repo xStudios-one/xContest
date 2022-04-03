@@ -14,7 +14,7 @@ export function Brand() {
     return (<>
         <Modal opened={modalOpened} onClose={() => setModalOpened(false)} withCloseButton={false}>
             <Text size="md" weight={700}>Flash warning</Text>
-            <Text py={10}>switching to light mode may cause temporary blindness and vision problems in the future. <br /> Are you sure you want to switch?</Text>
+            <Text py={10}>switching to eye burning mode may cause temporary blindness and/or vision problems in the future. <br /> Are you absolutely sure you want to switch?</Text>
             <Group position="center" grow>
                 <Button color="green" variant="outline" onClick={() => { toggleColorScheme(); setModalOpened(false); }}>Yes</Button>
                 <Button color="red" onClick={() => setModalOpened(false)}>No</Button>

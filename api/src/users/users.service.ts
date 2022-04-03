@@ -27,17 +27,28 @@ export class UsersService {
   async createUser(
     username: string,
     password: string,
-  ): Promise<User | undefined> {
+    email: string,
+  ): Promise<any | undefined> {
     const salt = uniqid.process();
+    if (
+      await this.prisma.user.findFirst({
+        where: {
+          OR: [{ email: email }, { name: username }],
+        },
+      })
+    ) {
+      return null;
+    }
     const user = await this.prisma.user.create({
       data: {
         name: username,
+        email: email,
         password: sha256(password + salt).toString(),
         salt: salt,
       },
     });
 
-    if (user) return user;
+    if (user) return { name: user.name, email: user.email };
   }
 
   async checkLogin(

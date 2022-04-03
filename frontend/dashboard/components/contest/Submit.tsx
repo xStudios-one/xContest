@@ -11,7 +11,9 @@ const Submit: NextPage<SubmitProps> = () => {
 
     const form = useForm({
         initialValues: {
-            problem: ""
+            problem: "",
+            code: "",
+            language: "",
         }
     })
 
@@ -34,7 +36,6 @@ const Submit: NextPage<SubmitProps> = () => {
                 <form onSubmit={form.onSubmit((values) => console.log(values))}>
                     <Select
                         label="Problem"
-                        name="problem"
                         data={problems}
                         placeholder="Problem Name"
                         required
@@ -43,7 +44,6 @@ const Submit: NextPage<SubmitProps> = () => {
 
                     <Textarea
                         label="Code"
-                        name="code"
                         placeholder={exampleCode}
                         autosize
                         minRows={3}
@@ -51,15 +51,16 @@ const Submit: NextPage<SubmitProps> = () => {
                         onInput={(e) => {
                             if (e.currentTarget.value && e.currentTarget.value != '') setIsCodePasted(true);
                             else setIsCodePasted(false);
-                        }} />
+                        }} 
+                        {...form.getInputProps('code')}/>
 
                     <Select
                         label="Programming language"
-                        name="language"
                         data={['c++', 'javascript', 'python', 'rust']}
                         required={isCodePasted}
                         disabled={!isCodePasted}
                         mt={10}
+                        {...form.getInputProps('language')}
                     />
 
                     <Group position="right"><Button type="submit" mt={10}>Submit</Button></Group>

@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ContestsModule } from './contests/contests.module';
+import { ProblemsModule } from './problems/problems.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ContestsModule } from './contests/contests.module';
     AuthModule,
     UsersModule,
     ContestsModule,
+    ProblemsModule,
   ],
   controllers: [],
   providers: [PrismaService],

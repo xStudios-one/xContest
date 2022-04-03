@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/service/prisma/prisma.service';
 import { Contest } from '@prisma/client';
 
@@ -83,6 +87,63 @@ export class ContestsService {
       });
     } catch (e) {
       return undefined;
+    }
+  }
+
+  async isUserOnContest(tag, user) {
+    return !!(await this.prismaService.usersOnContests.findFirst({
+      where: {
+        contest: {
+          tag: tag,
+        },
+        User: {
+          id: user.id,
+        },
+      },
+    }));
+  }
+
+  async joinContest(tag, user) {
+    if (await this.isUserOnContest(tag, user)) {
+      throw new ConflictException();
+    }
+    const dbResponse = await this.prismaService.contest.update({
+      //TODO: fix olix code please
+      where: {
+        tag: tag,
+      },
+      data: {
+        participants: {
+          create: [
+            {
+              User: {
+                connect: {
+                  id: user.id,
+                },
+              },
+            },
+          ],
+        },
+      },
+    });
+    if (!dbResponse) throw new NotFoundException();
+    return dbResponse;
+  }
+  async leaveContest(tag, user) {
+    if (await this.isUserOnContest(tag, user)) {
+      const contest = await this.getContest(tag);
+      const dbResponse = await this.prismaService.usersOnContests.delete({
+        where: {
+          userId_contestId: {
+            userId: user.id,
+            contestId: contest.id,
+          },
+        },
+      });
+      if (!dbResponse) throw new NotFoundException();
+      return dbResponse;
+    } else {
+      throw new NotFoundException();
     }
   }
 }

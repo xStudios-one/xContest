@@ -46,3 +46,44 @@ api/.env
 api/src/exec/service/runtime/out
 api/src/exec/service/runtime/code
 api/prisma/dev.db
+
+
+# dependencies
+frontend/dashboard/node_modules
+frontend/dashboard/.pnp
+frontend/dashboard/.pnp.js
+
+# testing
+frontend/dashboard/coverage
+
+# next.js
+frontend/dashboard/.next/
+frontend/dashboard/out/
+
+# production
+frontend/dashboard/build
+
+# misc
+frontend/dashboard/.DS_Store
+frontend/dashboard/*.pem
+
+# debug
+frontend/dashboard/npm-debug.log*
+frontend/dashboard/yarn-debug.log*
+frontend/dashboard/yarn-error.log*
+frontend/dashboard/.pnpm-debug.log*
+
+# local env files
+frontend/dashboard/.env.local
+frontend/dashboard/.env.development.local
+frontend/dashboard/.env.test.local
+frontend/dashboard/.env.production.local
+
+# vercel
+frontend/dashboard/.vercel
+
+# typescript
+frontend/dashboard/*.tsbuildinfo
+
+start/node_modules
+frontend/dashboard/node_modules

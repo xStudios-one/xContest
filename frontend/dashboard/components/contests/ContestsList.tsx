@@ -23,7 +23,6 @@ const ContestsList: NextPage = () => {
         color: "red",
         title: "Error",
         message: "Unexpected error has occurred while loading contests",
-        autoClose: false,
       });
     });
 

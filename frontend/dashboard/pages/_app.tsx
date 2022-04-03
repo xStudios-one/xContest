@@ -29,7 +29,7 @@ export default function App(props: AppProps) {
 
   useEffect(() => {
     router.events.on('routeChangeStart', () => setDrawerOpened(false))
-  }, [])
+  }, [router.events])
 
   return (
     <>

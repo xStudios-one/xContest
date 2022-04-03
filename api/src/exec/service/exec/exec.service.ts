@@ -148,7 +148,10 @@ export class ExecService {
     exec(
       `clang++ ./src/exec/service/runtime/code/${workerID}.cpp -o ./src/exec/service/runtime/${workerID}-OC.out`,
     ).once('exit', (exitCode) => {
-      if (exitCode != 0) return; // TODO: Notify user about compilation error?
+      if (exitCode != 0) {
+        console.log('notok');
+        return;
+      } // TODO: Notify user about compilation error?
       for (const test of tests) {
         fs.copyFileSync(
           `./src/exec/service/runtime/${workerID}-OC.out`,
@@ -188,7 +191,7 @@ export class ExecService {
     if (!submission[0].resultsAvailable) return { resultsAvailable: false };
     const result = await this.prismaService.results.findUnique({
       where: {
-        id: submission.resultsId,
+        id: submission[0].resultsId,
       },
     });
     try {

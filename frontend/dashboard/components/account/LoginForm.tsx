@@ -13,9 +13,10 @@ import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../Constants";
 import { showNotification } from "@mantine/notifications";
+import Link from "next/link";
 
 interface LoginFormProps {
-  onLogin: (token: string, username: string) => void;
+  onLogin: (token: string, username: string, email: string) => void;
 }
 
 const LoginForm: NextPage<LoginFormProps> = ({ onLogin }) => {
@@ -53,7 +54,8 @@ const LoginForm: NextPage<LoginFormProps> = ({ onLogin }) => {
 
     localStorage.setItem("Authorization", response.access_token);
     localStorage.setItem("Username", username);
-    onLogin(response.access_token, username);
+    localStorage.setItem("Email", response.email);
+    onLogin(response.access_token, username, response.email);
     showNotification({
       title: "Login Success",
       color: "green",
@@ -131,7 +133,7 @@ const LoginForm: NextPage<LoginFormProps> = ({ onLogin }) => {
             />
 
             <Group position="right" mt="md">
-              <Button variant="subtle">Sign up</Button>
+              <Link href="/register" passHref><Button component="a" variant="subtle">Sign up</Button></Link>
               <Button type="submit">Login</Button>
             </Group>
           </form>
