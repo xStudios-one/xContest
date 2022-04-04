@@ -14,3 +14,5 @@ echo "DATABASE_URL=file:./dev.db" >> .env
 cd ../frontend/dashboard
 
 npm install -y
+
+cd ../..
