@@ -16,3 +16,9 @@
 ## Start/Stop xContest platform
 - go to [start directory](/start)
 - run `sh ./install.sh`
+
+## Testing
+### Dashboard
+- start api on port 3000 and dashboard on port 3001
+- go to [dashboard](/frontend/dashboard/)
+- use `npm run test` to run tests in console or `npm run e2e` to open cypress window

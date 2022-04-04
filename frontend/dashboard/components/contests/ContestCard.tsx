@@ -11,6 +11,7 @@ const ContestCard: NextPage<ContestProps> = ({ name, tag }) => {
   return (
     <Link href={`/contest/${tag}`} passHref>
       <Paper
+        className="contest-card"
         p={12}
         sx={(theme) => ({
           display: "block",

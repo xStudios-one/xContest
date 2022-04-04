@@ -33,6 +33,7 @@ const UserCard: NextPage<UserProps> = ({ username, email }) => {
           <Button
             variant="subtle"
             color="red"
+            id="logout-button"
             p={4}
             onClick={() => {
               localStorage.removeItem("Authorization");

@@ -1,0 +1,56 @@
+// ***********************************************
+// This example commands.js shows you how to
+// create various custom commands and overwrite
+// existing commands.
+//
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+//
+//
+// -- This is a parent command --
+Cypress.Commands.add('login', (username, password, redirect = true, check = true) => {
+    if (redirect == true) cy.get('a[href="/account"]').isNotDetached().click({ force: true })
+
+    cy.get('input[name="username"]').type(username)
+    cy.get('input[name="password"]').type(password)
+    cy.get('button[type="submit"]').click()
+
+    if (check) cy.contains('Login Success').should('exist')
+})
+
+Cypress.Commands.add('register', (email, username, password, redirect = true, check = true) => {
+    if (redirect == true) cy.get('a[href="/account"]').isNotDetached().click({ force: true })
+
+    cy.get('a[href="/register"]').click()
+
+    cy.get('input[name="email"]').type(email)
+    cy.get('input[name="username"]').type(username)
+    cy.get('input[name="password"]').type(password)
+
+    cy.get('button[type="submit"]').click()
+
+    if (check) cy.contains('Registration Success').should('exist')
+})
+
+Cypress.Commands.add('ensureLogin', (username, password) => {
+    if (localStorage.getItem('Authorization') == null) {
+        // TODO: ensure login with ping to the server
+        cy.login(username, password)
+    }
+})
+//
+//
+// -- This is a child command --
+Cypress.Commands.add('isNotDetached', { prevSubject: true }, (subject, options) => {
+    return cy.wrap(subject).should(($el) => { expect(Cypress.dom.isDetached($el)).to.eq(false, 'Element is not detached') });
+})
+//
+//
+// -- This is a dual command --
+// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
+//
+//
+// -- This will overwrite an existing command --
+// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })

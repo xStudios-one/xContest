@@ -63,12 +63,12 @@ const Contest = () => {
         }
       })
       .then((response) => {
-          showNotification({
-            color: 'green',
-            title: 'Success',
-            message: `You've left this contest successfully`
-          })
-          setIsOnContest(false);
+        showNotification({
+          color: 'green',
+          title: 'Success',
+          message: `You've left this contest successfully`
+        })
+        setIsOnContest(false);
       })
       .catch(() => {
         showNotification({
@@ -89,7 +89,7 @@ const Contest = () => {
         }
       })
       .then((response) => {
-          setIsOnContest(response.data.isUserOnContest);
+        setIsOnContest(response.data.isUserOnContest);
       })
       .catch(() => {
         showNotification({
@@ -113,9 +113,9 @@ const Contest = () => {
 
       <Modal opened={modalOpened} onClose={() => setModalOpened(false)} withCloseButton={false}>
         <Text size="md" weight={700}>Are you sure?</Text>
-        <Text py={10}>After leaving the contest, some data may be lost or unavailable.<br/>Are you sure that you want to leave this contest?</Text>
+        <Text py={10}>After leaving the contest, some data may be lost or unavailable.<br />Are you sure that you want to leave this contest?</Text>
         <Group position="center" grow>
-          <Button color="red" variant="outline" onClick={() => {setModalOpened(false); leaveContest(contest.tag);}}>Yes</Button>
+          <Button color="red" variant="outline" onClick={() => { setModalOpened(false); leaveContest(contest.tag); }}>Yes</Button>
           <Button color="green" onClick={() => { setModalOpened(false); }}>No</Button>
         </Group>
       </Modal>
@@ -124,7 +124,7 @@ const Contest = () => {
         <Paper p={8} mb={8}>
           <Group position="apart">
             <Text size="lg" ml={8}>{contest.name}</Text>
-            {isOnContest && <Button variant="subtle" color="red" onClick={() => setModalOpened(true)}><UserMinus size={20} /></Button>}
+            {isOnContest && <Button variant="subtle" id="leave-contest" color="red" onClick={() => setModalOpened(true)}><UserMinus size={20} /></Button>}
           </Group>
         </Paper>
 
@@ -146,7 +146,7 @@ const Contest = () => {
 
           <Tabs.Tab label="Login" icon={<Login size={18} />} hidden={token != null}>
             <LoginForm
-              onLogin={(token, username, email) => {router.reload()}}
+              onLogin={(token, username, email) => { router.reload() }}
             />
           </Tabs.Tab>
         </Tabs>

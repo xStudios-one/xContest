@@ -119,6 +119,7 @@ const LoginForm: NextPage<LoginFormProps> = ({ onLogin }) => {
           >
             <TextInput
               required
+              name="username"
               label="Username"
               placeholder="admin"
               {...form.getInputProps("username")}
@@ -127,6 +128,7 @@ const LoginForm: NextPage<LoginFormProps> = ({ onLogin }) => {
               required
               label="Password"
               type="password"
+              name="password"
               placeholder="admin123"
               {...form.getInputProps("password")}
               mt="md"
