@@ -45,6 +45,11 @@ jobs:
           cd frontend/dashboard
           npm run build
 
+      - name: Setup API test environment
+        run: |
+          cd api
+          node test_setup.js
+
       - name: Cypress tests
         uses: cypress-io/github-action@v2
         with:
