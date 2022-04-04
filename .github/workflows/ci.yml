@@ -24,7 +24,7 @@ jobs:
       fail-fast: false
       matrix:
           # run copies of the current job in parallel
-          containers: [1, 2, 3]
+          containers: [1]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
