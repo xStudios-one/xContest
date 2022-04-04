@@ -15,7 +15,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  basic-tests:
+  electron-tests:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
@@ -54,5 +54,5 @@ jobs:
       - name: Export videos
         uses: actions/upload-artifact@v2
         with:
-          name: basic-tests-videos
-          path: frontend/dashboard/cypress/videos
+          name: electron-tests-videos
+          path: cypress/videos
