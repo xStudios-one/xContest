@@ -90,5 +90,5 @@ frontend/dashboard/node_modules
 
 .VSCodeCounter/
 
-# cypress
-cypress/videos/
+# cypress dashboard
+frontend/dashboard/cypress/videos/

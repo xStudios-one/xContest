@@ -1,6 +1,3 @@
-# main directory
-npm install -y
-
 # api
 cd api
 
