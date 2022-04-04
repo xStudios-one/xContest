@@ -48,7 +48,7 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v2
         with:
-          install: false
+          install: true
           start: bash ./test_environment_start.sh
         
       - name: Export videos
