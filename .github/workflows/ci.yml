@@ -55,4 +55,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: basic-tests-videos
-          path: frontend/dashboard/cypress/videos
+          path: cypress/videos
