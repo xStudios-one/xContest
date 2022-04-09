@@ -1,4 +1,4 @@
-import { Accordion, Badge, Button, Text } from "@mantine/core";
+import { Accordion, Badge, Button, LoadingOverlay, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import axios from "axios";
 import type { NextPage } from "next";
@@ -19,13 +19,17 @@ const ProblemList: NextPage<ProblemListProps> = ({ contestTag }) => {
     }
 
     const [problems, setProblems] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const devData = [{id: 'gaz', tag: 'gaz', name: 'Gąsienica'}];
 
     function getProblems(tag: any) {
         if (tag == undefined) return;
         axios.get(`${API_URL}/problems/${tag}`)
-            .then(res => setProblems(res.data))
+            .then(res => {
+                setProblems(res.data);
+                setIsLoading(false);
+            })
             .catch(() => showNotification({
                 color: 'red',
                 title: 'Error',
@@ -59,27 +63,30 @@ const ProblemList: NextPage<ProblemListProps> = ({ contestTag }) => {
     }
 
     return (<>
-        <Accordion iconPosition="right">
-            {problems.map(problem =>
-                <Accordion.Item label={
-                    <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'space-evenly' }}>
-                        <div style={centerDiv}>
-                            <Link href={`/contest/${contestTag}/problem/${problem.tag}`} passHref>
-                                <Button component="a" variant="subtle" compact>{problem.name}</Button>
-                            </Link>
+        <div style={{ position: 'relative', minHeight: '50px' }}>
+            <LoadingOverlay visible={isLoading} />
+            <Accordion iconPosition="right">
+                {problems.map(problem =>
+                    <Accordion.Item label={
+                        <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'space-evenly' }}>
+                            <div style={centerDiv}>
+                                <Link href={`/contest/${contestTag}/problem/${problem.tag}`} passHref>
+                                    <Button component="a" variant="subtle" compact>{problem.name}</Button>
+                                </Link>
+                            </div>
+
+                            <div style={centerDiv}><Badge mx={6}>{problem.tag}</Badge></div>
+                            <div style={centerDiv}><Badge color="cyan" mx={6}>-</Badge></div>
+                            <div style={centerDiv}><Badge color={getDifficultyColor(problem.difficulty)} mx={6}>{problem.difficulty}</Badge></div>
                         </div>
+                    } key={problem.tag} >
+                        <ProblemStats memory={problem.memoryLimit} time={problem.timeLimit} submissionsLeft={1-problem.maxSubmissions} maxSubmissions={problem.maxSubmissions}/>
+                    </Accordion.Item >
+                )
+                }
 
-                        <div style={centerDiv}><Badge mx={6}>{problem.tag}</Badge></div>
-                        <div style={centerDiv}><Badge color="cyan" mx={6}>-</Badge></div>
-                        <div style={centerDiv}><Badge color={getDifficultyColor(problem.difficulty)} mx={6}>{problem.difficulty}</Badge></div>
-                    </div>
-                } key={problem.tag} >
-                    <ProblemStats memory={problem.memoryLimit} time={problem.timeLimit} submissionsLeft={1-problem.maxSubmissions} maxSubmissions={problem.maxSubmissions}/>
-                </Accordion.Item >
-            )
-            }
-
-        </Accordion >
+            </Accordion >
+        </div>
     </>
     );
 };

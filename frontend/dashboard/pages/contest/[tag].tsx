@@ -112,9 +112,7 @@ const Contest = () => {
 
 
   return (
-    <div style={{ position: "relative" }}>
-      <LoadingOverlay visible={isLoading} />
-
+    <div>
       <Modal opened={modalOpened} onClose={() => setModalOpened(false)} withCloseButton={false}>
         <Text size="md" weight={700}>Are you sure?</Text>
         <Text py={10}>After leaving the contest, some data may be lost or unavailable.<br />Are you sure that you want to leave this contest?</Text>
@@ -125,12 +123,15 @@ const Contest = () => {
       </Modal>
 
       <div>
-        <Paper p={8} mb={8}>
-          <Group position="apart">
-            <Text size="lg" ml={8}>{contest.name}</Text>
-            {isOnContest && <Button variant="subtle" id="leave-contest" color="red" onClick={() => setModalOpened(true)}><UserMinus size={20} /></Button>}
-          </Group>
-        </Paper>
+        <div style={{ position: "relative" }}>
+          <LoadingOverlay visible={isLoading} />
+          <Paper p={8} mb={8}>
+            <Group position="apart">
+              <Text size="lg" ml={8}>{contest.name}</Text>
+              {isOnContest && <Button variant="subtle" id="leave-contest" color="red" onClick={() => setModalOpened(true)}><UserMinus size={20} /></Button>}
+            </Group>
+          </Paper>
+        </div>
 
         <Tabs active={active} onTabChange={index => setActive(index)}>
           <Tabs.Tab label="Problems" icon={<Books size={18} />}><ProblemList contestTag={contest.tag} /></Tabs.Tab>
