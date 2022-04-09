@@ -14,6 +14,8 @@ import axios from "axios";
 import { API_URL } from "../../Constants";
 import { showNotification } from "@mantine/notifications";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { login } from '../../app/slices/loginSlice';
 
 interface LoginFormProps {
   onLogin: (token: string, username: string, email: string) => void;
@@ -22,6 +24,8 @@ interface LoginFormProps {
 const LoginForm: NextPage<LoginFormProps> = ({ onLogin }) => {
   const [loginOverlayVisible, setLoginOverlayVisible] = useState(false);
   const [tfaModalVisible, setTfaModalVisible] = useState(false);
+
+  const dispatch = useDispatch();
 
   const submitLogin = async (username: string, password: string) => {
     if (username == "admin" && password == "admin123") {
@@ -55,6 +59,10 @@ const LoginForm: NextPage<LoginFormProps> = ({ onLogin }) => {
     localStorage.setItem("Authorization", response.access_token);
     localStorage.setItem("Username", username);
     localStorage.setItem("Email", response.email);
+
+    // set login state
+    dispatch(login());
+
     onLogin(response.access_token, username, response.email);
     showNotification({
       title: "Login Success",

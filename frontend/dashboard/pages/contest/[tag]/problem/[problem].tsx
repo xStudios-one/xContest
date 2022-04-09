@@ -6,7 +6,7 @@ import ProblemStats from "../../../../components/contest/ProblemStats";
 import { showNotification } from "@mantine/notifications";
 import { API_URL } from "../../../../Constants";
 import { Button, Group, LoadingOverlay, Paper, ScrollArea, Text } from "@mantine/core";
-import { ArrowBack } from "tabler-icons-react";
+import { ArrowBack, Download } from "tabler-icons-react";
 import Link from "next/link";
 
 const ProblemData: NextPage = () => {
@@ -50,9 +50,12 @@ const ProblemData: NextPage = () => {
       <Paper p={8} mb={8}>
         <Group position="apart">
             <Text size="lg" ml={8}>{query.tag} - {problem.name} ({problem.tag})</Text>
-            <Link href={`/contest/${query.tag}`} passHref>
-              <Button component="a" variant="subtle"><ArrowBack size={22} /></Button>
-            </Link>
+            <Group>
+              <Button component="a" variant="subtle" color="green"><Download size={22} /></Button>
+              <Link href={`/contest/${query.tag}`} passHref>
+                <Button component="a" variant="subtle"><ArrowBack size={22} /></Button>
+              </Link>
+            </Group>
         </Group>
       </Paper>
 

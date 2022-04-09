@@ -19,6 +19,9 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import { API_URL } from "../Constants";
 import Router from "next/router";
+import store from '../app/store';
+import { login } from '../app/slices/loginSlice';
+import { Provider } from "react-redux";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -46,6 +49,7 @@ export default function App(props: AppProps) {
 
   return (
     <>
+      <Provider store={store}>
       <Head>
         <title>xContest Dashboard</title>
         <meta
@@ -104,6 +108,7 @@ export default function App(props: AppProps) {
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider >
+      </Provider>
     </>
   );
 }

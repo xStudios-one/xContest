@@ -11,10 +11,10 @@ interface ProblemStatsProps {
 const ProblemStats: NextPage<ProblemStatsProps> = ({ memory, time, submissionsLeft, maxSubmissions, difficulty }) => {
 
     const data = [
-        {id: 'mem', label: 'Memory Limit', stats: `${memory} MB`},
-        {id: 'time', label: 'Time Limit', stats: `${time} seconds`},
-        {id: 'subl', label: 'Submissions Left', stats: `${submissionsLeft}`},
-        {id: 'msub', label: 'Max Submissions', stats: `${maxSubmissions}`}
+        {id: 'mem', label: 'Memory Limit', stats: `${(memory < 0 ? '-' : memory)} MB`},
+        {id: 'time', label: 'Time Limit', stats: `${(time < 0 ? '-' : time)} seconds`},
+        {id: 'subl', label: 'Submissions Left', stats: `${(submissionsLeft < 0 ? '-' : submissionsLeft)}`},
+        {id: 'msub', label: 'Max Submissions', stats: `${(maxSubmissions < 0 ? '-' : maxSubmissions)}`}
     ];
 
     if (difficulty) {

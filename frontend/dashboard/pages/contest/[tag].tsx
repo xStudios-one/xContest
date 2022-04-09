@@ -21,6 +21,8 @@ import MySubmissions from "../../components/contest/MySubmissions";
 import ProblemList from "../../components/contest/ProblemList";
 import Submit from "../../components/contest/Submit";
 import { API_URL } from "../../Constants";
+import { RootState } from '../../app/store';
+import { useSelector } from "react-redux";
 
 const Contest = () => {
   const router = useRouter();
@@ -33,6 +35,8 @@ const Contest = () => {
   const [token, setToken] = useState<null | string>(null);
   const [active, setActive] = useState(0);
   const [modalOpened, setModalOpened] = useState(false);
+
+  const isLogged = useSelector((state: RootState) => state.login.isLogged);
 
   function loadContestInfo(tag: any) {
     if (tag == undefined) return;
@@ -137,16 +141,16 @@ const Contest = () => {
           <Tabs.Tab label="My Submissions" icon={<Send size={18} />} hidden={!isOnContest}><MySubmissions contestTag={contest.tag} /></Tabs.Tab>
           <Tabs.Tab label="Messages" icon={<Mailbox size={18} />} hidden={!isOnContest}></Tabs.Tab>
 
-          <Tabs.Tab label="Join" icon={<UserPlus size={18} />} hidden={isOnContest || token == null}>
+          <Tabs.Tab label="Join" icon={<UserPlus size={18} />} hidden={isOnContest || !isLogged}>
             <JoinForm tag={contest.tag} onJoin={() => {
               setIsOnContest(true);
               setActive(0);
             }} />
           </Tabs.Tab>
 
-          <Tabs.Tab label="Login" icon={<Login size={18} />} hidden={token != null}>
+          <Tabs.Tab label="Login" icon={<Login size={18} />} hidden={isLogged}>
             <LoginForm
-              onLogin={(token, username, email) => { router.reload() }}
+              onLogin={(token, username, email) => {setActive(0)}}
             />
           </Tabs.Tab>
         </Tabs>

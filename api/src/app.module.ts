@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ContestsModule } from './contests/contests.module';
 import { ProblemsModule } from './problems/problems.module';
+import { MessagesModule } from './messages/messages.module';
+import { SubmissionsModule } from './submissions/submissions.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { ProblemsModule } from './problems/problems.module';
     UsersModule,
     ContestsModule,
     ProblemsModule,
+    MessagesModule,
+    SubmissionsModule,
   ],
   controllers: [],
   providers: [PrismaService],

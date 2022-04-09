@@ -1,13 +1,16 @@
 import { Button, Group, MediaQuery, Paper, Select, Stack, Text, Textarea } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import axios from "axios";
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { API_URL } from "../../Constants";
+import { showNotification } from "@mantine/notifications";
 
 interface SubmitProps {
     contestTag: string;
 }
 
-const Submit: NextPage<SubmitProps> = () => {
+const Submit: NextPage<SubmitProps> = ({ contestTag }) => {
 
     const form = useForm({
         initialValues: {
@@ -17,8 +20,18 @@ const Submit: NextPage<SubmitProps> = () => {
         }
     })
 
-    const [problems, setProblems] = useState(['Haker', 'Gąsienica', 'Płoty'])
+    const [problems, setProblems] = useState(['Loading...'])
     const [isCodePasted, setIsCodePasted] = useState(false);
+
+    useEffect(() => {
+        axios.get(`${API_URL}/problems/${contestTag}`)
+            .then(res => setProblems(res.data.map((e: any) => e.name)))
+            .catch(() => showNotification({
+                color: 'red',
+                title: 'Error',
+                message: 'Could not load problems, please try again later'
+            }))
+    }, [contestTag]);
 
     const exampleCode = `int main() {
     return 0;

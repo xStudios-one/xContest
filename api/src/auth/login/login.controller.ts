@@ -7,6 +7,7 @@ import {
   BadRequestException,
   Body,
   ConflictException,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
@@ -21,6 +22,7 @@ export class LoginController {
   ) {}
 
   @UseGuards(AuthGuard('local'))
+  @HttpCode(200)
   @Post('login')
   async login(@Request() req) {
     return this.authService.login(req.user);

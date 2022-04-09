@@ -2,6 +2,9 @@ import { Avatar, Button, Group, Paper, Text, Stack } from "@mantine/core";
 import type { NextPage } from "next";
 import { Logout } from "tabler-icons-react";
 import Router from "next/router";
+import { logout } from '../../app/slices/loginSlice';
+import { useDispatch } from "react-redux";
+import { showNotification } from "@mantine/notifications";
 
 interface UserProps {
   username: string;
@@ -9,6 +12,8 @@ interface UserProps {
 }
 
 const UserCard: NextPage<UserProps> = ({ username, email }) => {
+
+  const dispatch = useDispatch();
 
   return (
     <div>
@@ -39,7 +44,13 @@ const UserCard: NextPage<UserProps> = ({ username, email }) => {
               localStorage.removeItem("Authorization");
               localStorage.removeItem("Username");
               localStorage.removeItem("Email");
-              Router.reload();
+              
+              dispatch(logout());
+              showNotification({
+                title: 'Success',
+                color: 'green',
+                message: 'You have logged out successfully'
+              })
             }}
           >
             <Logout />
