@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   UseGuards,
   Request,
   BadRequestException,
@@ -10,6 +11,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from '../auth.service';
+import { JwtAuthGuard } from '../jwt-auth.guard';
 
 @Controller('auth')
 export class LoginController {
@@ -22,6 +24,12 @@ export class LoginController {
   @Post('login')
   async login(@Request() req) {
     return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('ping')
+  async ping() {
+    return 'success';
   }
 
   @Post('register')

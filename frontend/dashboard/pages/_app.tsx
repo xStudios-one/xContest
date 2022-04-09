@@ -1,5 +1,6 @@
 import { AppProps } from "next/app";
 import Head from "next/head";
+import axios from 'axios';
 import {
   MantineProvider,
   AppShell,
@@ -16,6 +17,8 @@ import { Brand } from "../components/base/Brand";
 import { useEffect, useState } from "react";
 import { NotificationsProvider } from "@mantine/notifications";
 import { useRouter } from "next/router";
+import { API_URL } from "../Constants";
+import Router from "next/router";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -26,6 +29,16 @@ export default function App(props: AppProps) {
 
   const [drawerOpened, setDrawerOpened] = useState(false);
   const router = useRouter();
+
+  // useEffect(() => {
+  //   if (localStorage.getItem("Authorization"))
+  //   axios.get(`${API_URL}/auth/ping`).catch(() => {
+  //       localStorage.removeItem("Authorization");
+  //       localStorage.removeItem("Username");
+  //       localStorage.removeItem("Email");
+  //       Router.reload();
+  //   });
+  // }, []);
 
   useEffect(() => {
     router.events.on('routeChangeStart', () => setDrawerOpened(false))

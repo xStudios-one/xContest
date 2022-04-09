@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import { User, List } from "tabler-icons-react";
 import { ThemeIcon, UnstyledButton, Group, Text } from "@mantine/core";
+import { useEffect, useState } from "react";
 
 interface MainLinkProps {
   icon: React.ReactNode;
@@ -11,6 +12,7 @@ interface MainLinkProps {
 }
 
 const MainLink: NextPage<MainLinkProps> = ({ icon, color, label, href }) => {
+
   return (
     <Link href={href} passHref>
       <UnstyledButton
@@ -52,7 +54,7 @@ const data = [
   },
   {
     icon: <User size={16} />,
-    color: "blue",
+    color: "green",
     label: "Account",
     href: "/account",
   },
