@@ -4,6 +4,8 @@ npm install -y
 # api
 cd api
 
+npm i -g prisma@latest
+npm i @prisma/client@latest 
 npm install -y
 
 touch .env
