@@ -16,6 +16,11 @@ export class UsersService {
     });
   }
 
+  /**
+   * Find the first user where the id matches the id passed in.
+   * @param {number} id - number - The id of the user we want to get.
+   * @returns A user object
+   */
   async getById(id: number): Promise<User | undefined> {
     return this.prisma.user.findFirst({
       where: {
@@ -24,6 +29,7 @@ export class UsersService {
     });
   }
 
+  /* Creating a user. */
   async createUser(
     username: string,
     password: string,

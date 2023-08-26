@@ -4,6 +4,7 @@ try {
     const { Signale } = require("signale");
     const cli = new Signale({ scope: "CLI" });
     const apiDirectoryCommand = "cd ../api/";
+    const webDirectoryCommand = "cd ../frontend/dashboard/";
     console.clear();
     cli.info("Welcome to the xContest smart cli v.1.0.0");
     async function mainMenu() {
@@ -37,9 +38,8 @@ try {
         }
         if (operation.value == "sta-a") {
             exec(`pm2 delete xstudios.one`);
-            exec(
-                `${apiDirectoryCommand} && pm2 start "npm run start" --name xContestAPI --namespace xstudios.one`
-            );
+            exec(`${apiDirectoryCommand} && pm2 start "npm run start" --name xContestAPI --namespace xstudios.one`);
+            exec(`${webDirectoryCommand} && pm2 start "npm run dev" --name xContestWEB --namespace xstudios.one`);
             exec(`pm2 start xContestFrontend`); // TODO add proper function later
             console.clear();
             cli.success("Processess started!");
@@ -52,9 +52,7 @@ try {
             mainMenu();
         }
         if (operation.value == "stats-a") {
-            cli.info(
-                "Please run: \x1b[7mpm2 monit\x1b[0m to monitor your processess!"
-            );
+            cli.info("Please run: \x1b[7mpm2 monit\x1b[0m to monitor your processess!");
         }
     }
     async function moreOptions() {

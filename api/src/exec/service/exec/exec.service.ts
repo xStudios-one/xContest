@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/service/prisma/prisma.service';
 import { ProblemTest } from '@prisma/client';
 
+/* Defining the return type of the function `startWorker` */
 interface workerReturn {
   status: number;
   msg: string;
@@ -22,8 +23,14 @@ interface workerReturn {
 //    MAXSCORE (int)
 //    tests (optional ...)
 //    participants ...
+/* It's a service that handles the execution of code */
 @Injectable()
 export class ExecService {
+  /**
+   * The constructor function is a special function that is called when a new instance of the class is
+   * created
+   * @param {PrismaService} prismaService - This is the service that we created in the previous step.
+   */
   constructor(private prismaService: PrismaService) {}
   async getContest(tag: string) {
     return await this.prismaService.contest.findUnique({
@@ -93,6 +100,14 @@ export class ExecService {
     });
   }
 
+  /**
+   * It compiles the code, runs it against the test cases, and returns the results
+   * @param {string} code - The code to be executed
+   * @param {string} contestTag - The tag of the contest
+   * @param {string} problemTag - The tag of the problem
+   * @param {any} user - The user object that is passed to the function.
+   * @returns A workerReturn object
+   */
   async startWorker(
     code: string,
     contestTag: string,
@@ -182,6 +197,11 @@ export class ExecService {
     };
   }
 
+  /**
+   * It takes in a submission id, and returns the output of the submission
+   * @param {string} id - The id of the submission
+   * @returns The result of the submission
+   */
   async retrieveAns(id: string): Promise<any> {
     if (!id) {
       return 'NID';

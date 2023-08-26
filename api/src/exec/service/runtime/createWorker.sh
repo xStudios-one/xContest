@@ -1,3 +1,5 @@
+// Creating a jail directory, moving the program and input file to the jail directory, executing the
+// program in the jail directory, checking the output, and moving the output to the parent directory.
 #? create jail directory
 mkdir jailed-worker-$1
 cd jailed-worker-$1
